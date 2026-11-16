@@ -267,7 +267,12 @@ function randomSureness()
 
 export class ContentList
 {
-    content_getter: Iterable<Content> = [];
+    content_getter: Iterable<Content> | Array<Content>;
+
+    constructor(content_getter: Iterable<Content> | Array<Content>)
+    {
+        this.content_getter = content_getter;
+    };
 
     recommend(user: User, proximity: number, minsureness: number = randomSureness(), recency: number = 7889400000, time: number = Date.now()): Array<Recommendation>
     {
@@ -278,6 +283,8 @@ export class ContentList
             if(content.sureness < minsureness)
                 continue;
             if((dist = content.distanceObj(user)) > proximity)
+                continue;
+            if (Math.abs(time - content.date) > recency)
                 continue;
             recommendations.push(new Recommendation(content, user, content.sureness * dist * dist));
         };
