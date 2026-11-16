@@ -1,13 +1,12 @@
-import { Obj, Content, ContentList } from ".";
+import { Obj, Content, ContentList } from "./index.js";
 
 // little test
-var user = new Obj(true, 10);
-var content = new Content(true, 10);
-var content2 = new Content(true, 10);
+var user = new Obj(10, true);
+var content = new Content(10, true);
+var content2 = new Content(10, true);
 var contentlist = new ContentList([content, content2]);
-console.log(contentlist)
 var recommendations = contentlist.recommend(user, 1.5, 0, Infinity);
 console.log(recommendations);
-console.log((recommendations[0] as any).content.definition);
-console.log((recommendations[0] as any).user.definition);
-console.log((recommendations[0] as any).level);
+console.log(recommendations[0].content.sureness);
+console.log(recommendations[0].user.definition.array);
+console.log(contentlist.content_getter);

@@ -1,16 +1,15 @@
 export class Definition
 {
     array: Array<number>;
-    length: number;
 
-    constructor(other?: Array<number>, random: boolean = false, length: number = 1024)
+    constructor(length: number, other?: Array<number>, random: boolean = false)
     {
-        this.array = new Array<number>(length);
-        this.length = length;
+        this.array = new Array<number>(length).fill(0);
         if(other)
             this.assign(other);
         else
             if(random) this.random();
+        console.log(this.array.length);
     };
 
     toString(): string
@@ -26,104 +25,109 @@ export class Definition
 
     random()
     {
-        for (let i = 0; i < this.length; i++)
+        for (let i = 0; i < this.array.length; i++)
             (this.array[i] as number) = Math.random();
     };
 
     inplacemul(other: Definition): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < Math.min(this.array.length, other.array.length); i++)
             (this.array[i] as number) *= (other.array[i] as number);
         return this;
     };
 
     mul(other: Definition): Definition
     {
-        return new Definition(this.array).inplacemul(other);
+        return new Definition(this.array.length, this.array, false).inplacemul(other);
     };
 
     inplaceadd(other: Definition): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < Math.min(this.array.length, other.array.length); i++)
             (this.array[i] as number) += (other.array[i] as number);
         return this;
     };
 
     add(other: Definition): Definition
     {
-        return new Definition(this.array).inplaceadd(other);
+        return new Definition(this.array.length, this.array, false).inplaceadd(other);
     };
 
     inplacediv(other: Definition): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < Math.min(this.array.length, other.array.length); i++)
             (this.array[i] as number) /= (other.array[i] as number);
         return this;
     };
 
     div(other: Definition): Definition
     {
-        return new Definition(this.array).inplacediv(other);
+        return new Definition(this.array.length, this.array, false).inplacediv(other);
     };
 
     inplacesub(other: Definition): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < Math.min(this.array.length, other.array.length); i++)
+        {
             (this.array[i] as number) -= (other.array[i] as number);
+        };
         return this;
     };
 
     sub(other: Definition): Definition
     {
-        return new Definition(this.array).inplacesub(other);
+        console.log(`this.array: ${this.array}, other.array: ${other.array}`);
+        const retval = new Definition(this.array.length, this.array, false).inplacesub(other);
+        console.log(`retval.array: ${retval.array}`);
+        return retval;
     };
 
     inplacemulscalar(other: number): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < this.array.length; i++)
             (this.array[i] as number) *= other;
         return this;
     };
 
     mulscalar(other: number): Definition
     {
-        return new Definition(this.array).inplacemulscalar(other);
+        return new Definition(this.array.length, this.array, false).inplacemulscalar(other);
     };
 
     inplaceaddscalar(other: number): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < this.array.length; i++)
             (this.array[i] as number) += other;
         return this;
     };
 
     addscalar(other: number): Definition
     {
-        return new Definition(this.array).inplaceaddscalar(other);
+        return new Definition(this.array.length, this.array, false).inplaceaddscalar(other);
     };
 
     inplacedivscalar(other: number): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < this.array.length; i++)
             (this.array[i] as number) /= other;
         return this;
     };
 
     divscalar(other: number): Definition
     {
-        return new Definition(this.array).inplacedivscalar(other);
+        return new Definition(this.array.length, this.array, false).inplacedivscalar(other);
     };
 
     inplacesubscalar(other: number): Definition
     {
-        for(let i = 0; i < this.length; i++)
+        for(let i = 0; i < this.array.length; i++)
             (this.array[i] as number) -= other;
         return this;
     };
 
     subscalar(other: number): Definition
     {
-        return new Definition(this.array).inplacesubscalar(other);
+        return new Definition(this.array.length, this.array, false).inplacesubscalar(other);
     };
 
     sqr(): Definition
@@ -134,13 +138,13 @@ export class Definition
     sum(): number
     {
         var sum = 0;
-        for(let i = 0; i < this.length; i++) sum += (this.array[i] as number);
+        for(let i = 0; i < this.array.length; i++) sum += (this.array[i] as number);
         return sum;
     };
 
     avg(): number
     {
-        return this.sum() / this.length;
+        return this.sum() / this.array.length;
     };
 
     dot(other: Definition): number
@@ -160,9 +164,9 @@ export class Obj
     pastdefs: Array<PastDef> = [];
     maxdeflength: number = 1000;
 
-    constructor(random: boolean = true, length: number = 1024)
+    constructor(length: number, random: boolean = true)
     {
-        this.definition = new Definition(undefined, random, length);
+        this.definition = new Definition(length, undefined, random);
     };
 
     private getdef(): void
@@ -251,7 +255,7 @@ export class Recommendation
     reportScore(score: number)
     {
         this.content.sureness += score;
-        const contentdef = new Definition(this.content.definition.array);
+        const contentdef = new Definition(this.content.definition.array.length, this.content.definition.array, false);
         this.content.adddef(this.user.definition, score);
         this.user.adddef(contentdef, Math.max(score, Math.sqrt(this.content.sureness * score)));
     };
