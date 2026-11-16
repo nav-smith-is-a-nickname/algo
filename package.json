@@ -2,8 +2,9 @@
   "name": "algo",
   "version": "0.0.1",
   "description": "Recommendation algorithm",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -11,5 +12,9 @@
     "algorithm"
   ],
   "author": "siirxe",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
 }

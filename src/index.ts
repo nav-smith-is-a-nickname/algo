@@ -16,19 +16,19 @@ export class Definition
     assign(other: Array<number>)
     {
         for(let i = 0; i < other.length; i++)
-            this.array[i] = other[i];
+            (this.array[i] as number) = (other[i] as number);
     };
 
     random()
     {
         for (let i = 0; i < this.length; i++)
-            this.array[i] = Math.random();
+            (this.array[i] as number) = Math.random();
     };
 
     inplacemul(other: Definition): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] *= other.array[i];
+            (this.array[i] as number) *= (other.array[i] as number);
         return this;
     };
 
@@ -40,7 +40,7 @@ export class Definition
     inplaceadd(other: Definition): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] += other.array[i];
+            (this.array[i] as number) += (other.array[i] as number);
         return this;
     };
 
@@ -52,7 +52,7 @@ export class Definition
     inplacediv(other: Definition): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] /= other.array[i];
+            (this.array[i] as number) /= (other.array[i] as number);
         return this;
     };
 
@@ -64,7 +64,7 @@ export class Definition
     inplacesub(other: Definition): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] -= other.array[i];
+            (this.array[i] as number) -= (other.array[i] as number);
         return this;
     };
 
@@ -76,7 +76,7 @@ export class Definition
     inplacemulscalar(other: number): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] *= other;
+            (this.array[i] as number) *= other;
         return this;
     };
 
@@ -88,7 +88,7 @@ export class Definition
     inplaceaddscalar(other: number): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] += other;
+            (this.array[i] as number) += other;
         return this;
     };
 
@@ -100,7 +100,7 @@ export class Definition
     inplacedivscalar(other: number): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] /= other;
+            (this.array[i] as number) /= other;
         return this;
     };
 
@@ -112,7 +112,7 @@ export class Definition
     inplacesubscalar(other: number): Definition
     {
         for(let i = 0; i < this.length; i++)
-            this.array[i] -= other;
+            (this.array[i] as number) -= other;
         return this;
     };
 
@@ -129,7 +129,7 @@ export class Definition
     sum(): number
     {
         var sum = 0;
-        for(let i = 0; i < this.length; i++) sum += this.array[i];
+        for(let i = 0; i < this.length; i++) sum += (this.array[i] as number);
         return sum;
     };
 
@@ -149,7 +149,7 @@ export class Definition
     };
 };
 
-export class Object
+export class Obj
 {
     definition: Definition;
     pastdefs: Array<PastDef> = [];
@@ -180,7 +180,7 @@ export class Object
             var lowest_score = -1, lowest_score_num = -1;
             for (let i = 0; i < this.pastdefs.length; i++)
             {
-                const element = this.pastdefs[i];
+                const element = this.pastdefs[i] as PastDef;
                 if(lowest_score < 0)
                 {
                     lowest_score = i;
@@ -203,7 +203,7 @@ export class Object
         return other.distance(this.definition);
     };
 
-    distanceobject(other: Object): number
+    distanceObj(other: Obj): number
     {
         return this.distance(other.definition);
     };
@@ -221,9 +221,9 @@ export class PastDef
     };
 };
 
-export type User = Exclude<Object, Content>;
+export type User = Exclude<Obj, Content>;
 
-export class Content extends Object
+export class Content extends Obj
 {
     sureness: number = 0;
     content: any; // this can be anything
@@ -272,7 +272,7 @@ export class ContentList
         {
             if(content.sureness < minsureness)
                 continue;
-            if((dist = content.distanceobject(user)) > proximity)
+            if((dist = content.distanceObj(user)) > proximity)
                 continue;
             recommendations.push(new Recommendation(content, user, content.sureness * dist * dist));
         };
