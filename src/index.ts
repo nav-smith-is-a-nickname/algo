@@ -13,6 +13,11 @@ export class Definition
             if(random) this.random();
     };
 
+    toString(): string
+    {
+        return `Definition(${this.array.toLocaleString()})`;
+    };
+
     assign(other: Array<number>)
     {
         for(let i = 0; i < other.length; i++)
