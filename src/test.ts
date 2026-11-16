@@ -5,6 +5,7 @@ var user = new Obj(true, 10);
 var content = new Content(true, 10);
 var content2 = new Content(true, 10);
 var contentlist = new ContentList([content, content2]);
+console.log(contentlist)
 var recommendations = contentlist.recommend(user, 1.5, 0, Infinity);
 console.log(recommendations);
 console.log((recommendations[0] as any).content.definition);
